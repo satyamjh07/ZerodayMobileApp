@@ -16,12 +16,21 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import * as WebBrowser from "expo-web-browser";
+import { useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useColors } from "@/hooks/useColors";
 
 export default function AuthScreen() {
   const colors = useColors();
   const { signIn, signUp, signInWithGoogle } = useAuth();
+
+  useEffect(() => {
+    if (Platform.OS !== "web") {
+      WebBrowser.warmUpAsync();
+      return () => { WebBrowser.coolDownAsync(); };
+    }
+  }, []);
 
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");

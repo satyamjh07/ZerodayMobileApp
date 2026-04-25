@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { makeRedirectUri } from "expo-auth-session";
+import * as Linking from "expo-linking";
 import * as WebBrowser from "expo-web-browser";
 import { Session, User } from "@supabase/supabase-js";
 import React, {
@@ -12,6 +12,8 @@ import React, {
 import { supabase, Profile } from "@/lib/supabase";
 
 WebBrowser.maybeCompleteAuthSession();
+
+const OAUTH_REDIRECT = "mobile://auth-callback";
 
 type AuthContextType = {
   user: User | null;
@@ -27,6 +29,36 @@ type AuthContextType = {
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
+
+async function applyTokensFromUrl(url: string): Promise<void> {
+  try {
+    const hashStr = url.includes("#") ? url.split("#")[1] : "";
+    const queryStr = url.includes("?")
+      ? url.split("?")[1]?.split("#")[0]
+      : "";
+    const hash = new URLSearchParams(hashStr);
+    const query = new URLSearchParams(queryStr);
+
+    const access_token =
+      hash.get("access_token") ?? query.get("access_token");
+    const refresh_token =
+      hash.get("refresh_token") ?? query.get("refresh_token");
+
+    if (access_token) {
+      await supabase.auth.setSession({
+        access_token,
+        refresh_token: refresh_token ?? "",
+      });
+      return;
+    }
+
+    // PKCE code exchange fallback
+    const code = hash.get("code") ?? query.get("code");
+    if (code) {
+      await supabase.auth.exchangeCodeForSession(code);
+    }
+  } catch {}
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -47,6 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (user) await loadProfile(user.id);
   }, [user, loadProfile]);
 
+  // Supabase auth state listener
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -55,7 +88,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) loadProfile(session.user.id);
@@ -65,8 +100,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, [loadProfile]);
 
+  // Deep-link listener for OAuth callbacks on Android (Chrome Custom Tabs
+  // cannot intercept custom-scheme redirects automatically, so we catch them here)
+  useEffect(() => {
+    const handleUrl = ({ url }: { url: string }) => {
+      if (url.includes("auth-callback")) {
+        applyTokensFromUrl(url);
+      }
+    };
+
+    const sub = Linking.addEventListener("url", handleUrl);
+
+    // Handle the case where the app was cold-started via the deep link
+    Linking.getInitialURL().then((url) => {
+      if (url && url.includes("auth-callback")) applyTokensFromUrl(url);
+    });
+
+    return () => sub.remove();
+  }, []);
+
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
     if (error) return { error: error.message };
     return {};
   };
@@ -74,51 +131,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) return { error: error.message };
-    if (data.user && !data.user.email_confirmed_at) return { needsConfirm: true };
+    if (data.user && !data.user.email_confirmed_at)
+      return { needsConfirm: true };
     return {};
   };
 
   const signInWithGoogle = async (): Promise<{ error?: string }> => {
     try {
-      const redirectTo = makeRedirectUri({ scheme: "mobile", path: "auth-callback" });
-
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo,
+          redirectTo: OAUTH_REDIRECT,
           skipBrowserRedirect: true,
         },
       });
 
-      if (error || !data.url) return { error: error?.message ?? "Failed to get OAuth URL" };
+      if (error || !data.url)
+        return { error: error?.message ?? "Failed to get OAuth URL" };
 
-      const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo);
+      // Open system browser. On iOS, openAuthSessionAsync intercepts the
+      // redirect automatically and returns { type: 'success', url }.
+      // On Android with Expo Go, it returns 'dismiss'; the Linking listener
+      // above will fire separately when the deep link arrives.
+      const result = await WebBrowser.openAuthSessionAsync(
+        data.url,
+        OAUTH_REDIRECT,
+      );
 
-      if (result.type !== "success") {
-        return result.type === "cancel" ? {} : { error: "Authentication was dismissed" };
+      if (result.type === "success") {
+        await applyTokensFromUrl(result.url);
       }
-
-      const url = result.url;
-      const hashParams = url.includes("#")
-        ? new URLSearchParams(url.split("#")[1])
-        : null;
-      const queryParams = url.includes("?")
-        ? new URLSearchParams(url.split("?")[1].split("#")[0])
-        : null;
-
-      const access_token =
-        hashParams?.get("access_token") ?? queryParams?.get("access_token");
-      const refresh_token =
-        hashParams?.get("refresh_token") ?? queryParams?.get("refresh_token");
-
-      if (access_token) {
-        const { error: sessionError } = await supabase.auth.setSession({
-          access_token,
-          refresh_token: refresh_token ?? "",
-        });
-        if (sessionError) return { error: sessionError.message };
-      }
-
+      // On Android 'dismiss' is expected — the Linking listener handles it.
       return {};
     } catch (e: any) {
       return { error: e?.message ?? "Google sign-in failed" };
@@ -144,7 +187,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, session, loading, signIn, signUp, signOut, signInWithGoogle, saveProfile, refreshProfile }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        profile,
+        session,
+        loading,
+        signIn,
+        signUp,
+        signOut,
+        signInWithGoogle,
+        saveProfile,
+        refreshProfile,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
