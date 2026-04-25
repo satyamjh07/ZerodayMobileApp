@@ -1,0 +1,14 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "3vdy5wle5snGXMtMii1SX"
+uri = "file://artifacts/mobile/assets/images/icon.png"
+type = "image"
+title = "zeroday app icon"
+
+[[generated]]
+id = "Stt9xYxkStf-L5OTlCwx-"
+uri = "file://artifacts/mobile/assets/images/splash-icon.png"
+type = "image"
+title = "zeroday splash background"
