@@ -149,19 +149,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error || !data.url)
         return { error: error?.message ?? "Failed to get OAuth URL" };
 
-      // Open system browser. On iOS, openAuthSessionAsync intercepts the
-      // redirect automatically and returns { type: 'success', url }.
-      // On Android with Expo Go, it returns 'dismiss'; the Linking listener
-      // above will fire separately when the deep link arrives.
-      const result = await WebBrowser.openAuthSessionAsync(
-        data.url,
-        OAUTH_REDIRECT,
-      );
+      // Use openBrowserAsync on all platforms. On Android, openAuthSessionAsync
+      // cannot intercept custom-scheme (mobile://) redirects inside Chrome Custom
+      // Tabs — the browser stays open. openBrowserAsync lets Android's intent
+      // system route the mobile:// deep link back to Expo Go naturally, and the
+      // Linking listener above handles the session tokens.
+      await WebBrowser.openBrowserAsync(data.url, {
+        showInRecents: false,
+        dismissButtonStyle: "close",
+      });
 
-      if (result.type === "success") {
-        await applyTokensFromUrl(result.url);
-      }
-      // On Android 'dismiss' is expected — the Linking listener handles it.
       return {};
     } catch (e: any) {
       return { error: e?.message ?? "Google sign-in failed" };
