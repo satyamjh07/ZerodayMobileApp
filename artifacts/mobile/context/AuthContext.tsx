@@ -1,4 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { makeRedirectUri } from "expo-auth-session";
+import * as WebBrowser from "expo-web-browser";
 import { Session, User } from "@supabase/supabase-js";
 import React, {
   createContext,
@@ -9,6 +11,8 @@ import React, {
 } from "react";
 import { supabase, Profile } from "@/lib/supabase";
 
+WebBrowser.maybeCompleteAuthSession();
+
 type AuthContextType = {
   user: User | null;
   profile: Profile | null;
@@ -17,6 +21,7 @@ type AuthContextType = {
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
   signUp: (email: string, password: string) => Promise<{ error?: string; needsConfirm?: boolean }>;
   signOut: () => Promise<void>;
+  signInWithGoogle: () => Promise<{ error?: string }>;
   saveProfile: (data: Partial<Profile>) => Promise<{ error?: string }>;
   refreshProfile: () => Promise<void>;
 };
@@ -73,6 +78,53 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return {};
   };
 
+  const signInWithGoogle = async (): Promise<{ error?: string }> => {
+    try {
+      const redirectTo = makeRedirectUri({ scheme: "mobile", path: "auth-callback" });
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo,
+          skipBrowserRedirect: true,
+        },
+      });
+
+      if (error || !data.url) return { error: error?.message ?? "Failed to get OAuth URL" };
+
+      const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo);
+
+      if (result.type !== "success") {
+        return result.type === "cancel" ? {} : { error: "Authentication was dismissed" };
+      }
+
+      const url = result.url;
+      const hashParams = url.includes("#")
+        ? new URLSearchParams(url.split("#")[1])
+        : null;
+      const queryParams = url.includes("?")
+        ? new URLSearchParams(url.split("?")[1].split("#")[0])
+        : null;
+
+      const access_token =
+        hashParams?.get("access_token") ?? queryParams?.get("access_token");
+      const refresh_token =
+        hashParams?.get("refresh_token") ?? queryParams?.get("refresh_token");
+
+      if (access_token) {
+        const { error: sessionError } = await supabase.auth.setSession({
+          access_token,
+          refresh_token: refresh_token ?? "",
+        });
+        if (sessionError) return { error: sessionError.message };
+      }
+
+      return {};
+    } catch (e: any) {
+      return { error: e?.message ?? "Google sign-in failed" };
+    }
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
     await AsyncStorage.removeItem("sa_timer_start");
@@ -92,7 +144,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, session, loading, signIn, signUp, signOut, saveProfile, refreshProfile }}>
+    <AuthContext.Provider value={{ user, profile, session, loading, signIn, signUp, signOut, signInWithGoogle, saveProfile, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );

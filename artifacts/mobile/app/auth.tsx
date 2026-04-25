@@ -21,7 +21,7 @@ import { useColors } from "@/hooks/useColors";
 
 export default function AuthScreen() {
   const colors = useColors();
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, signInWithGoogle } = useAuth();
 
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [email, setEmail] = useState("");
@@ -29,6 +29,7 @@ export default function AuthScreen() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const handleSubmit = async () => {
     if (!email.trim() || !password.trim()) {
@@ -59,6 +60,16 @@ export default function AuthScreen() {
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogle = async () => {
+    setGoogleLoading(true);
+    try {
+      const result = await signInWithGoogle();
+      if (result.error) Alert.alert("Google Sign-In Failed", result.error);
+    } finally {
+      setGoogleLoading(false);
     }
   };
 
@@ -215,10 +226,43 @@ export default function AuthScreen() {
                 )}
               </LinearGradient>
             </Pressable>
+
+            <View style={s.dividerRow}>
+              <View style={s.dividerLine} />
+              <Text style={s.dividerText}>or</Text>
+              <View style={s.dividerLine} />
+            </View>
+
+            <Pressable
+              style={[s.googleBtn, googleLoading && { opacity: 0.7 }]}
+              onPress={handleGoogle}
+              disabled={googleLoading}
+            >
+              {googleLoading ? (
+                <ActivityIndicator color={colors.foreground} />
+              ) : (
+                <>
+                  <GoogleIcon />
+                  <Text style={s.googleText}>Continue with Google</Text>
+                </>
+              )}
+            </Pressable>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
+  );
+}
+
+function GoogleIcon() {
+  return (
+    <View style={{ width: 20, height: 20, marginRight: 10 }}>
+      <Image
+        source={{ uri: "https://www.google.com/favicon.ico" }}
+        style={{ width: 20, height: 20 }}
+        resizeMode="contain"
+      />
+    </View>
   );
 }
 
@@ -319,5 +363,36 @@ const styles = (colors: ReturnType<typeof useColors>) =>
       color: "#fff",
       fontSize: 16,
       fontFamily: "Inter_700Bold",
+    },
+    dividerRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginVertical: 20,
+      gap: 12,
+    },
+    dividerLine: {
+      flex: 1,
+      height: 1,
+      backgroundColor: colors.border,
+    },
+    dividerText: {
+      fontSize: 13,
+      fontFamily: "Inter_400Regular",
+      color: colors.text2,
+    },
+    googleBtn: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: colors.surface3,
+      borderRadius: 14,
+      borderWidth: 1,
+      borderColor: colors.border,
+      paddingVertical: 14,
+    },
+    googleText: {
+      color: colors.foreground,
+      fontSize: 15,
+      fontFamily: "Inter_600SemiBold",
     },
   });
