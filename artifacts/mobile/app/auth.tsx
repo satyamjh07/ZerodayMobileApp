@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Image,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -79,14 +80,11 @@ export default function AuthScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <View style={s.header}>
-            <LinearGradient
-              colors={["#7c6fff", "#00d4ff"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={s.logoGradient}
-            >
-              <Text style={s.logoText}>Z</Text>
-            </LinearGradient>
+            <Image
+              source={{ uri: "https://res.cloudinary.com/dn5uwablh/image/upload/f_auto,q_auto,w_200,h_200,c_fill,g_face/v1777051164/study_aura/avatars/wm6dfcqjj0kuzwommyfu.png" }}
+              style={s.logo}
+              resizeMode="cover"
+            />
             <Text style={s.brand}>ZEROday</Text>
             <Text style={s.tagline}>Study smarter. Level up your aura.</Text>
           </View>
@@ -234,18 +232,13 @@ const styles = (colors: ReturnType<typeof useColors>) =>
       paddingVertical: 40,
     },
     header: { alignItems: "center", marginBottom: 40 },
-    logoGradient: {
-      width: 72,
-      height: 72,
-      borderRadius: 20,
-      alignItems: "center",
-      justifyContent: "center",
+    logo: {
+      width: 88,
+      height: 88,
+      borderRadius: 24,
       marginBottom: 16,
-    },
-    logoText: {
-      fontSize: 36,
-      fontFamily: "Inter_700Bold",
-      color: "#fff",
+      borderWidth: 2,
+      borderColor: "rgba(124, 111, 255, 0.35)",
     },
     brand: {
       fontSize: 28,
