@@ -67,8 +67,17 @@ export default function DashboardScreen() {
     let streak = 0;
     const d = new Date(now);
     d.setHours(0, 0, 0, 0);
-    const studyDates = new Set(all.map((s) => { const dt = new Date(s.start_time); dt.setHours(0,0,0,0); return dt.getTime(); }));
-    while (studyDates.has(d.getTime())) { streak++; d.setDate(d.getDate() - 1); }
+    const studyDates = new Set(
+      all.map((s) => {
+        const dt = new Date(s.start_time);
+        dt.setHours(0, 0, 0, 0);
+        return dt.getTime();
+      }),
+    );
+    while (studyDates.has(d.getTime())) {
+      streak++;
+      d.setDate(d.getDate() - 1);
+    }
 
     const monday = new Date(now);
     monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
@@ -84,11 +93,16 @@ export default function DashboardScreen() {
     let auraScore: number | null = null;
     let auraLevel = "";
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (session) {
         const res = await fetch(`${SUPABASE_URL}/functions/v1/calculate-aura`, {
           method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
           body: JSON.stringify({}),
         });
         if (res.ok) {
@@ -111,7 +125,9 @@ export default function DashboardScreen() {
     setLoading(false);
   }, [user]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -120,7 +136,8 @@ export default function DashboardScreen() {
   };
 
   const hour = new Date().getHours();
-  const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+  const greeting =
+    hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
   const name = profile?.name?.split(" ")[0] || "friend";
 
   const styles = StyleSheet.create({
@@ -133,20 +150,68 @@ export default function DashboardScreen() {
       borderBottomWidth: 1,
       borderBottomColor: colors.border,
     },
-    greeting: { fontSize: 12, color: colors.text2, textTransform: "uppercase", letterSpacing: 1 },
-    userName: { fontSize: 24, fontWeight: "800", color: colors.foreground, marginTop: 2, fontFamily: "Inter_700Bold" },
+    greeting: {
+      fontSize: 12,
+      color: colors.text2,
+      textTransform: "uppercase",
+      letterSpacing: 1,
+    },
+    userName: {
+      fontSize: 24,
+      fontWeight: "800",
+      color: colors.foreground,
+      marginTop: 2,
+      fontFamily: "Inter_700Bold",
+    },
     section: { paddingHorizontal: 20, paddingTop: 20 },
-    sectionTitle: { fontSize: 11, fontWeight: "700", color: colors.text3, textTransform: "uppercase", letterSpacing: 1, marginBottom: 12 },
+    sectionTitle: {
+      fontSize: 11,
+      fontWeight: "700",
+      color: colors.text3,
+      textTransform: "uppercase",
+      letterSpacing: 1,
+      marginBottom: 12,
+    },
     statsRow: { flexDirection: "row", gap: 10 },
-    auraCard: { backgroundColor: colors.card, borderRadius: 14, padding: 20, marginHorizontal: 20, marginTop: 16, borderWidth: 1, borderColor: colors.border, alignItems: "center" },
-    auraLabel: { fontSize: 11, color: colors.text2, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 },
+    auraCard: {
+      backgroundColor: colors.card,
+      borderRadius: 14,
+      padding: 20,
+      marginHorizontal: 20,
+      marginTop: 16,
+      borderWidth: 1,
+      borderColor: colors.border,
+      alignItems: "center",
+    },
+    auraLabel: {
+      fontSize: 11,
+      color: colors.text2,
+      textTransform: "uppercase",
+      letterSpacing: 1,
+      marginBottom: 4,
+    },
     auraScore: { fontSize: 48, fontWeight: "900", color: colors.primary },
-    auraLevel: { fontSize: 13, color: colors.cyan, marginTop: 4, fontWeight: "600" },
+    auraLevel: {
+      fontSize: 13,
+      color: colors.cyan,
+      marginTop: 4,
+      fontWeight: "600",
+    },
     barsSection: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 40 },
-    barsContainer: { flexDirection: "row", alignItems: "flex-end", height: 80, gap: 6 },
+    barsContainer: {
+      flexDirection: "row",
+      alignItems: "flex-end",
+      height: 80,
+      gap: 6,
+    },
     barWrap: { flex: 1, height: "100%", justifyContent: "flex-end" },
     bar: { borderRadius: 4, minHeight: 4 },
-    dayLabel: { fontSize: 9, color: colors.text3, textAlign: "center", marginTop: 4 },
+    dayLabel: {
+      fontSize: 9,
+      color: colors.text3,
+      textAlign: "center",
+      marginTop: 4,
+    },
     loadingText: { color: colors.text2, textAlign: "center", marginTop: 60 },
   });
 
@@ -157,17 +222,36 @@ export default function DashboardScreen() {
     <View style={styles.container}>
       <ScrollView
         style={styles.scroll}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={colors.primary}
+          />
+        }
       >
         <View style={styles.header}>
-          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "flex-end",
+            }}
+          >
             <View>
               <Text style={styles.greeting}>{greeting}</Text>
               <Text style={styles.userName}>{name}</Text>
             </View>
             <TouchableOpacity
               onPress={() => router.push("/notifications")}
-              style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: colors.surface2, alignItems: "center", justifyContent: "center" }}
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 18,
+                backgroundColor: colors.surface2,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
               hitSlop={8}
             >
               <Bell size={18} color={colors.text2} />
@@ -182,27 +266,45 @@ export default function DashboardScreen() {
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>Today</Text>
               <View style={styles.statsRow}>
-                <StatCard label="Study Time" value={formatDuration(data.todaySeconds) || "0m"} />
-                <StatCard label="Streak" value={`${data.streak}🔥`} accent={colors.orange} />
+                <StatCard
+                  label="Study Time"
+                  value={formatDuration(data.todaySeconds) || "0m"}
+                />
+                <StatCard
+                  label="Streak"
+                  value={`${data.streak}🔥`}
+                  accent={colors.orange}
+                />
               </View>
             </View>
 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>This Week</Text>
               <View style={styles.statsRow}>
-                <StatCard label="Total Time" value={formatDuration(data.weekSeconds) || "0h"} />
-                <StatCard label="Sessions" value={String(data.totalSessions)} accent={colors.green} />
+                <StatCard
+                  label="Total Time"
+                  value={formatDuration(data.weekSeconds) || "0h"}
+                />
+                <StatCard
+                  label="Sessions"
+                  value={String(data.totalSessions)}
+                  accent={colors.green}
+                />
               </View>
             </View>
 
             <View style={styles.auraCard}>
               <Text style={styles.auraLabel}>Aura Score</Text>
               <Text style={styles.auraScore}>{data.auraScore ?? "—"}</Text>
-              {data.auraLevel ? <Text style={styles.auraLevel}>{data.auraLevel}</Text> : null}
+              {data.auraLevel ? (
+                <Text style={styles.auraLevel}>{data.auraLevel}</Text>
+              ) : null}
             </View>
 
             <View style={styles.barsSection}>
-              <Text style={[styles.sectionTitle, { marginBottom: 12 }]}>Weekly Activity</Text>
+              <Text style={[styles.sectionTitle, { marginBottom: 12 }]}>
+                Weekly Activity
+              </Text>
               <View style={styles.barsContainer}>
                 {data.dayTotals.map((secs, i) => {
                   const max = Math.max(...data.dayTotals, 1);
@@ -211,10 +313,15 @@ export default function DashboardScreen() {
                   return (
                     <View key={i} style={styles.barWrap}>
                       <View
-                        style={[styles.bar, {
-                          height: `${pct}%` as any,
-                          backgroundColor: isToday ? colors.primary : colors.surface3,
-                        }]}
+                        style={[
+                          styles.bar,
+                          {
+                            height: `${pct}%` as any,
+                            backgroundColor: isToday
+                              ? colors.primary
+                              : colors.surface3,
+                          },
+                        ]}
                       />
                       <Text style={styles.dayLabel}>{DAY_LABELS[i]}</Text>
                     </View>
