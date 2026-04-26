@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import {
@@ -142,12 +142,7 @@ export default function AuthScreen() {
             <View style={s.field}>
               <Text style={s.label}>Email</Text>
               <View style={s.inputRow}>
-                <Feather
-                  name="mail"
-                  size={16}
-                  color={colors.text2}
-                  style={s.inputIcon}
-                />
+                <Mail size={16} color={colors.text2} style={s.inputIcon} />
                 <TextInput
                   style={s.input}
                   placeholder="you@example.com"
@@ -164,12 +159,7 @@ export default function AuthScreen() {
             <View style={s.field}>
               <Text style={s.label}>Password</Text>
               <View style={s.inputRow}>
-                <Feather
-                  name="lock"
-                  size={16}
-                  color={colors.text2}
-                  style={s.inputIcon}
-                />
+                <Lock size={16} color={colors.text2} style={s.inputIcon} />
                 <TextInput
                   style={s.input}
                   placeholder="••••••••"
@@ -183,11 +173,7 @@ export default function AuthScreen() {
                   onPress={() => setShowPassword((v) => !v)}
                   style={s.eyeBtn}
                 >
-                  <Feather
-                    name={showPassword ? "eye-off" : "eye"}
-                    size={16}
-                    color={colors.text2}
-                  />
+                  {showPassword ? <EyeOff size={16} color={colors.text2} /> : <Eye size={16} color={colors.text2} />}
                 </Pressable>
               </View>
             </View>
@@ -196,12 +182,7 @@ export default function AuthScreen() {
               <View style={s.field}>
                 <Text style={s.label}>Confirm Password</Text>
                 <View style={s.inputRow}>
-                  <Feather
-                    name="lock"
-                    size={16}
-                    color={colors.text2}
-                    style={s.inputIcon}
-                  />
+                  <Lock size={16} color={colors.text2} style={s.inputIcon} />
                   <TextInput
                     style={s.input}
                     placeholder="••••••••"

@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { Play, Square } from "lucide-react-native";
 import { Audio } from "expo-av";
 import React, { useEffect, useRef, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
@@ -53,8 +53,10 @@ export function NoiseCard({ id, name, url, emoji }: NoiseCardProps) {
       >
         {loading ? (
           <ActivityIndicator size="small" color={colors.primary} />
+        ) : isPlaying ? (
+          <Square size={16} color="#fff" />
         ) : (
-          <Feather name={isPlaying ? "square" : "play"} size={16} color={isPlaying ? "#fff" : colors.text2} />
+          <Play size={16} color={colors.text2} />
         )}
       </TouchableOpacity>
     </View>

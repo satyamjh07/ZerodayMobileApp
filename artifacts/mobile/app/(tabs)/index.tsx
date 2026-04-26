@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { Bell } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import {
@@ -170,7 +170,7 @@ export default function DashboardScreen() {
               style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: colors.surface2, alignItems: "center", justifyContent: "center" }}
               hitSlop={8}
             >
-              <Feather name="bell" size={18} color={colors.text2} />
+              <Bell size={18} color={colors.text2} />
             </TouchableOpacity>
           </View>
         </View>

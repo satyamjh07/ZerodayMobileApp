@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { ChevronDown, ChevronUp, Flag, Send, User, X } from "lucide-react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
@@ -180,7 +180,7 @@ export default function PostDetailScreen() {
               <View style={s.avatar}>
                 {profile?.avatar_url
                   ? <Image source={{ uri: profile.avatar_url }} style={s.avatarImg} />
-                  : <Feather name="user" size={18} color={colors.text2} />}
+                  : <User size={18} color={colors.text2} />}
               </View>
               <View>
                 <Text style={s.authorName}>{profile?.name || "Anonymous"}</Text>
@@ -220,7 +220,7 @@ export default function PostDetailScreen() {
                 style={[s.voteBtn, myVote === 1 && { backgroundColor: "rgba(124,111,255,0.15)" }]}
                 onPress={() => castVote(1)}
               >
-                <Feather name="chevron-up" size={20} color={myVote === 1 ? colors.primary : colors.text2} />
+                <ChevronUp size={20} color={myVote === 1 ? colors.primary : colors.text2} />
               </TouchableOpacity>
               <Text style={[s.scoreText, { color: score > 0 ? colors.primary : score < 0 ? colors.red : colors.text2 }]}>
                 {score > 0 ? `+${score}` : score}
@@ -229,10 +229,10 @@ export default function PostDetailScreen() {
                 style={[s.voteBtn, myVote === -1 && { backgroundColor: "rgba(255,59,92,0.12)" }]}
                 onPress={() => castVote(-1)}
               >
-                <Feather name="chevron-down" size={20} color={myVote === -1 ? colors.red : colors.text2} />
+                <ChevronDown size={20} color={myVote === -1 ? colors.red : colors.text2} />
               </TouchableOpacity>
               <TouchableOpacity style={s.reportBtn}>
-                <Feather name="flag" size={13} color={colors.text3} />
+                <Flag size={13} color={colors.text3} />
                 <Text style={s.reportText}>Report</Text>
               </TouchableOpacity>
             </View>
@@ -248,7 +248,7 @@ export default function PostDetailScreen() {
                 <View style={s.commentAvatar}>
                   {c.profiles?.avatar_url
                     ? <Image source={{ uri: c.profiles.avatar_url }} style={s.commentAvatarImg} />
-                    : <Feather name="user" size={13} color={colors.text3} />}
+                    : <User size={13} color={colors.text3} />}
                 </View>
                 <Text style={s.commentAuthor}>{c.profiles?.name || "Anonymous"}</Text>
                 <Text style={s.commentTime}>{timeAgo(c.created_at)}</Text>
@@ -271,7 +271,7 @@ export default function PostDetailScreen() {
               multiline
             />
             <TouchableOpacity style={s.sendBtn} onPress={submitComment} disabled={submitting}>
-              {submitting ? <ActivityIndicator color="#fff" size="small" /> : <Feather name="send" size={16} color="#fff" />}
+              {submitting ? <ActivityIndicator color="#fff" size="small" /> : <Send size={16} color="#fff" />}
             </TouchableOpacity>
           </View>
         )}
@@ -282,7 +282,7 @@ export default function PostDetailScreen() {
         <Modal visible animationType="fade" transparent onRequestClose={() => setLightboxIndex(null)}>
           <View style={s.lb}>
             <TouchableOpacity style={s.lbClose} onPress={() => setLightboxIndex(null)}>
-              <Feather name="x" size={24} color="#fff" />
+              <X size={24} color="#fff" />
             </TouchableOpacity>
             <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} contentOffset={{ x: lightboxIndex * SCREEN_W, y: 0 }}>
               {images.map((uri, i) => (

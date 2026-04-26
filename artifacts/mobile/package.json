@@ -16,9 +16,8 @@
     "@expo/ngrok": "^4.1.0",
     "@expo/vector-icons": "^15.0.3",
     "@react-native-async-storage/async-storage": "2.2.0",
-    "@supabase/supabase-js": "^2.49.4",
-    "expo-av": "~16.0.8",
     "@stardazed/streams-text-encoding": "^1.0.2",
+    "@supabase/supabase-js": "^2.49.4",
     "@tanstack/react-query": "catalog:",
     "@types/react": "~19.1.10",
     "@types/react-dom": "~19.1.7",
@@ -27,6 +26,7 @@
     "babel-plugin-react-compiler": "^19.0.0-beta-e993439-20250117",
     "expo": "~54.0.27",
     "expo-auth-session": "~7.0.10",
+    "expo-av": "~16.0.8",
     "expo-blur": "~15.0.8",
     "expo-constants": "~18.0.11",
     "expo-font": "~14.0.10",
@@ -57,5 +57,8 @@
     "typescript": "~5.9.2",
     "zod": "catalog:",
     "zod-validation-error": "^3.4.0"
+  },
+  "dependencies": {
+    "lucide-react-native": "^1.11.0"
   }
 }

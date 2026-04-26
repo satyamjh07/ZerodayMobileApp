@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { ChevronDown, ChevronUp, MessageCircle, User, X } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   Dimensions,
@@ -62,7 +62,7 @@ export function PostCard({ post, score, myVote, commentCount, onVote, onComments
             {profile?.avatar_url ? (
               <Image source={{ uri: profile.avatar_url }} style={s.avatarImg} />
             ) : (
-              <Feather name="user" size={16} color={colors.text2} />
+              <User size={16} color={colors.text2} />
             )}
           </View>
           <View style={s.headerInfo}>
@@ -120,7 +120,7 @@ export function PostCard({ post, score, myVote, commentCount, onVote, onComments
           style={[s.voteBtn, myVote === 1 && { backgroundColor: "rgba(124,111,255,0.15)" }]}
           onPress={() => onVote(post.id, 1)}
         >
-          <Feather name="chevron-up" size={18} color={myVote === 1 ? colors.primary : colors.text2} />
+          <ChevronUp size={18} color={myVote === 1 ? colors.primary : colors.text2} />
           {score !== 0 && (
             <Text style={[s.voteCount, { color: score > 0 ? colors.primary : colors.red }]}>
               {score > 0 ? `+${score}` : score}
@@ -131,10 +131,10 @@ export function PostCard({ post, score, myVote, commentCount, onVote, onComments
           style={[s.voteBtn, myVote === -1 && { backgroundColor: "rgba(255,59,92,0.12)" }]}
           onPress={() => onVote(post.id, -1)}
         >
-          <Feather name="chevron-down" size={18} color={myVote === -1 ? colors.red : colors.text2} />
+          <ChevronDown size={18} color={myVote === -1 ? colors.red : colors.text2} />
         </TouchableOpacity>
         <TouchableOpacity style={s.commentBtn} onPress={() => onComments(post.id)}>
-          <Feather name="message-circle" size={15} color={colors.text2} />
+          <MessageCircle size={15} color={colors.text2} />
           <Text style={[s.commentCount, { color: colors.text2 }]}>
             {commentCount > 0 ? commentCount : "Comment"}
           </Text>
@@ -146,7 +146,7 @@ export function PostCard({ post, score, myVote, commentCount, onVote, onComments
         <Modal visible animationType="fade" transparent onRequestClose={() => setLightboxIndex(null)}>
           <View style={s.lb}>
             <TouchableOpacity style={s.lbClose} onPress={() => setLightboxIndex(null)}>
-              <Feather name="x" size={24} color="#fff" />
+              <X size={24} color="#fff" />
             </TouchableOpacity>
             <ScrollView
               horizontal

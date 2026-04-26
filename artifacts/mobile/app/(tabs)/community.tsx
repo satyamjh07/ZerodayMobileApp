@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { Image as ImageIcon, X } from "lucide-react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
@@ -187,14 +187,14 @@ export default function CommunityScreen() {
             <View key={i} style={s.thumbCard}>
               <Image source={{ uri: img.uri }} style={s.thumbImg} />
               {img.uploading && <View style={s.thumbOverlay}><ActivityIndicator color="#fff" size="small" /></View>}
-              <TouchableOpacity style={s.thumbRemove} onPress={() => removeImage(i)}><Feather name="x" size={12} color="#fff" /></TouchableOpacity>
+              <TouchableOpacity style={s.thumbRemove} onPress={() => removeImage(i)}><X size={12} color="#fff" /></TouchableOpacity>
             </View>
           ))}
         </ScrollView>
       )}
       <View style={s.composerFooter}>
         <TouchableOpacity style={[s.imageBtn, images.length >= MAX_IMAGES && { opacity: 0.4 }]} onPress={pickImages} disabled={images.length >= MAX_IMAGES}>
-          <Feather name="image" size={18} color={colors.text2} />
+          <ImageIcon size={18} color={colors.text2} />
           <Text style={s.imageBtnText}>{images.length > 0 ? `${images.length}/${MAX_IMAGES}` : "Photo"}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[s.postBtn, (posting || images.some(x => x.uploading)) && { opacity: 0.6 }]} onPress={submitPost} disabled={posting || images.some(x => x.uploading)}>

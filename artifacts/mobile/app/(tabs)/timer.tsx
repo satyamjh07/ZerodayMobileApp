@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { Play, Square } from "lucide-react-native";
 import { AppHeader } from "@/components/AppHeader";
 import * as Haptics from "expo-haptics";
 import React, { useCallback, useEffect, useState } from "react";
@@ -124,12 +124,12 @@ export default function TimerScreen() {
           <View style={{ height: 24 }} />
           {isRunning ? (
             <TouchableOpacity style={styles.btnStop} onPress={handleStop} disabled={stopping}>
-              <Feather name="square" size={18} color="#fff" />
+              <Square size={18} color="#fff" />
               <Text style={styles.btnText}>{stopping ? "Saving..." : "Stop Session"}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity style={styles.btnStart} onPress={handleStart}>
-              <Feather name="play" size={18} color="#fff" />
+              <Play size={18} color="#fff" />
               <Text style={styles.btnText}>Start Studying</Text>
             </TouchableOpacity>
           )}

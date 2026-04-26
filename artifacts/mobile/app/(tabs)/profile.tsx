@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { LogOut, Zap } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import {
@@ -91,7 +91,7 @@ export default function ProfileScreen() {
               )}
               {profile?.aura_score != null && (
                 <View style={s.auraRow}>
-                  <Feather name="zap" size={13} color={colors.cyan ?? colors.primary} />
+                  <Zap size={13} color={colors.cyan ?? colors.primary} />
                   <Text style={s.auraText}>{profile.aura_score} Aura · {profile.aura_level || "Novice"}</Text>
                 </View>
               )}
@@ -109,7 +109,7 @@ export default function ProfileScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity style={s.signOutBtn} onPress={handleSignOut}>
-            <Feather name="log-out" size={16} color={colors.red} />
+            <LogOut size={16} color={colors.red} />
             <Text style={s.signOutText}>Sign Out</Text>
           </TouchableOpacity>
         </View>

@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { ArrowLeft, Bell } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -31,7 +31,7 @@ export function AppHeader({ title, subtitle, showBell = true, showBack = false }
       <View style={s.left}>
         {showBack && (
           <TouchableOpacity onPress={() => router.back()} style={s.backBtn} hitSlop={12}>
-            <Feather name="arrow-left" size={22} color={colors.foreground} />
+            <ArrowLeft size={22} color={colors.foreground} />
           </TouchableOpacity>
         )}
         <View>
@@ -45,7 +45,7 @@ export function AppHeader({ title, subtitle, showBell = true, showBack = false }
           style={[s.bellBtn, { backgroundColor: colors.surface2 }]}
           hitSlop={8}
         >
-          <Feather name="bell" size={18} color={colors.text2} />
+          <Bell size={18} color={colors.text2} />
         </TouchableOpacity>
       )}
     </View>

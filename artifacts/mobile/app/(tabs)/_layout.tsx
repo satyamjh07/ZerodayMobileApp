@@ -1,4 +1,4 @@
-import { Feather } from "@expo/vector-icons";
+import { Activity, Clock, Headphones, User, Users } from "lucide-react-native";
 import { Tabs } from "expo-router";
 import React from "react";
 import { Platform, StyleSheet, View } from "react-native";
@@ -35,7 +35,7 @@ export default function TabLayout() {
         options={{
           title: "Dashboard",
           tabBarIcon: ({ color, size }) => (
-            <Feather name="activity" size={size} color={color} />
+            <Activity size={size} color={color} />
           ),
         }}
       />
@@ -44,7 +44,7 @@ export default function TabLayout() {
         options={{
           title: "Timer",
           tabBarIcon: ({ color, size }) => (
-            <Feather name="clock" size={size} color={color} />
+            <Clock size={size} color={color} />
           ),
         }}
       />
@@ -53,7 +53,7 @@ export default function TabLayout() {
         options={{
           title: "Community",
           tabBarIcon: ({ color, size }) => (
-            <Feather name="users" size={size} color={color} />
+            <Users size={size} color={color} />
           ),
         }}
       />
@@ -62,7 +62,7 @@ export default function TabLayout() {
         options={{
           title: "Sounds",
           tabBarIcon: ({ color, size }) => (
-            <Feather name="headphones" size={size} color={color} />
+            <Headphones size={size} color={color} />
           ),
         }}
       />
@@ -71,7 +71,7 @@ export default function TabLayout() {
         options={{
           title: "Profile",
           tabBarIcon: ({ color, size }) => (
-            <Feather name="user" size={size} color={color} />
+            <User size={size} color={color} />
           ),
         }}
       />
