@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "ZEROday Mobile",
-    "slug": "mobile",
+    "name": "Study Aura",
+    "slug": "study-aura",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "mobile",
+    "scheme": "studyaura",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -14,9 +14,16 @@
       "backgroundColor": "#050508"
     },
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.studyaura.app"
     },
-    "android": {},
+    "android": {
+      "package": "com.studyaura.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#050508"
+      }
+    },
     "web": {
       "favicon": "./assets/images/icon.png"
     },
