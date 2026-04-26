@@ -1,4 +1,5 @@
 import { Feather } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   RefreshControl,
@@ -38,6 +39,7 @@ export default function DashboardScreen() {
   const colors = useColors();
   const { user, profile } = useAuth();
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const [data, setData] = useState<DashData | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -158,8 +160,19 @@ export default function DashboardScreen() {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
       >
         <View style={styles.header}>
-          <Text style={styles.greeting}>{greeting}</Text>
-          <Text style={styles.userName}>{name}</Text>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end" }}>
+            <View>
+              <Text style={styles.greeting}>{greeting}</Text>
+              <Text style={styles.userName}>{name}</Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => router.push("/notifications")}
+              style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: colors.surface2, alignItems: "center", justifyContent: "center" }}
+              hitSlop={8}
+            >
+              <Feather name="bell" size={18} color={colors.text2} />
+            </TouchableOpacity>
+          </View>
         </View>
 
         {loading ? (

@@ -1,3 +1,4 @@
+import { Feather } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack, useRouter, useSegments } from "expo-router";
@@ -40,6 +41,8 @@ function RootLayoutNav() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="auth" options={{ headerShown: false }} />
+        <Stack.Screen name="post/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="notifications" options={{ headerShown: false }} />
       </Stack>
     </>
   );
@@ -47,6 +50,8 @@ function RootLayoutNav() {
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
+    // Explicitly load Feather icon font so it works on all Android devices
+    ...Feather.font,
     Inter_400Regular: require("../assets/fonts/Inter_400Regular.ttf"),
     Inter_500Medium: require("../assets/fonts/Inter_500Medium.ttf"),
     Inter_600SemiBold: require("../assets/fonts/Inter_600SemiBold.ttf"),

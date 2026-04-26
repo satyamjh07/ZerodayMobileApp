@@ -1,4 +1,5 @@
 import { Feather } from "@expo/vector-icons";
+import { AppHeader } from "@/components/AppHeader";
 import * as Haptics from "expo-haptics";
 import React, { useCallback, useEffect, useState } from "react";
 import {
@@ -113,10 +114,7 @@ export default function TimerScreen() {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scroll}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>TIMER</Text>
-          <Text style={styles.headerSub}>Track your focus sessions</Text>
-        </View>
+        <AppHeader title="TIMER" subtitle="Track your focus sessions" />
 
         <View style={styles.timerSection}>
           <View style={styles.ringContainer}>

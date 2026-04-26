@@ -40,9 +40,10 @@ type PostCardProps = {
   commentCount: number;
   onVote: (postId: string, value: number) => void;
   onComments: (postId: string) => void;
+  onPress?: () => void;
 };
 
-export function PostCard({ post, score, myVote, commentCount, onVote, onComments }: PostCardProps) {
+export function PostCard({ post, score, myVote, commentCount, onVote, onComments, onPress }: PostCardProps) {
   const colors = useColors();
   const profile = post.profiles;
   const images = parseImages(post);
@@ -53,35 +54,38 @@ export function PostCard({ post, score, myVote, commentCount, onVote, onComments
 
   return (
     <View style={[s.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-      {/* Header */}
-      <View style={s.header}>
-        <View style={[s.avatar, { backgroundColor: colors.surface2, borderColor: colors.border }]}>
-          {profile?.avatar_url ? (
-            <Image source={{ uri: profile.avatar_url }} style={s.avatarImg} />
-          ) : (
-            <Feather name="user" size={16} color={colors.text2} />
-          )}
+      {/* Tappable post body: header + title + content → goes to detail screen */}
+      <TouchableOpacity onPress={onPress} activeOpacity={onPress ? 0.7 : 1} disabled={!onPress}>
+        {/* Header */}
+        <View style={s.header}>
+          <View style={[s.avatar, { backgroundColor: colors.surface2, borderColor: colors.border }]}>
+            {profile?.avatar_url ? (
+              <Image source={{ uri: profile.avatar_url }} style={s.avatarImg} />
+            ) : (
+              <Feather name="user" size={16} color={colors.text2} />
+            )}
+          </View>
+          <View style={s.headerInfo}>
+            <Text style={[s.authorName, { color: colors.foreground }]}>
+              {profile?.name || "Anonymous"}
+            </Text>
+            <Text style={[s.meta, { color: colors.text2 }]}>
+              {[profile?.class, profile?.target_year ? `Target ${profile.target_year}` : null, timeAgo(post.created_at)]
+                .filter(Boolean).join(" · ")}
+            </Text>
+          </View>
         </View>
-        <View style={s.headerInfo}>
-          <Text style={[s.authorName, { color: colors.foreground }]}>
-            {profile?.name || "Anonymous"}
-          </Text>
-          <Text style={[s.meta, { color: colors.text2 }]}>
-            {[profile?.class, profile?.target_year ? `Target ${profile.target_year}` : null, timeAgo(post.created_at)]
-              .filter(Boolean).join(" · ")}
-          </Text>
-        </View>
-      </View>
 
-      {/* Title */}
-      {post.title ? (
-        <Text style={[s.title, { color: colors.foreground }]}>{post.title}</Text>
-      ) : null}
+        {/* Title */}
+        {post.title ? (
+          <Text style={[s.title, { color: colors.foreground }]}>{post.title}</Text>
+        ) : null}
 
-      {/* Content */}
-      <Text style={[s.content, { color: colors.text2 }]} numberOfLines={5}>
-        {post.content?.trim()}
-      </Text>
+        {/* Content — sneak peek, 4 lines max; tap to read full */}
+        <Text style={[s.content, { color: colors.text2 }]} numberOfLines={4}>
+          {post.content?.trim()}
+        </Text>
+      </TouchableOpacity>
 
       {/* Image grid */}
       {images.length > 0 && (

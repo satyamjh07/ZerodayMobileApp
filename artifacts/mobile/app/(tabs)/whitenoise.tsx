@@ -1,4 +1,5 @@
 import { Audio } from "expo-av";
+import { AppHeader } from "@/components/AppHeader";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
@@ -75,10 +76,7 @@ export default function WhitenoiseScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>WHITE NOISE</Text>
-        <Text style={styles.headerSub}>Focus Ambient Sounds</Text>
-      </View>
+      <AppHeader title="WHITE NOISE" subtitle="Focus Ambient Sounds" />
       <FlatList
         data={allSounds}
         keyExtractor={(item) => item.id}
