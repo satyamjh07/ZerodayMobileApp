@@ -197,7 +197,7 @@ export default function CommunityScreen() {
     if (!commentInput.trim() || !commentsModal || !session) return;
     setSubmittingComment(true);
     try {
-      await fetch(`${SUPABASE_URL}/functions/v1/create-comment`, {
+      await fetch(`${SUPABASE_URL}/functions/v1/add-comment`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
         body: JSON.stringify({ post_id: commentsModal.postId, content: commentInput.trim() }),
