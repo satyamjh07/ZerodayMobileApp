@@ -29,8 +29,7 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd artifacts/mobile && PORT=18115 npm run start"
-waitForPort = 18115
+args = "cd artifacts/mobile && PORT=18117 npm run start"
 
 [agent]
 stack = "PNPM_WORKSPACE"
@@ -55,3 +54,7 @@ externalPort = 3000
 [[ports]]
 localPort = 18116
 externalPort = 3002
+
+[[ports]]
+localPort = 18117
+externalPort = 4200
