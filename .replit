@@ -29,7 +29,7 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd artifacts/mobile && PORT=18117 npm run start"
+args = "cd /home/runner/workspace/artifacts/mobile && PORT=18115 npm run start"
 
 [agent]
 stack = "PNPM_WORKSPACE"
