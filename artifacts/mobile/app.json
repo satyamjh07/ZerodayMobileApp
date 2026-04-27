@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Study Aura",
+    "name": "ZEROday",
     "slug": "study-aura",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "studyaura",
+    "scheme": "zeroday",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -15,17 +15,17 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.studyaura.app"
+      "bundleIdentifier": "com.zeroday.app"
     },
     "android": {
-      "package": "com.studyaura.app",
+      "package": "com.zeroday.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#050508"
       }
     },
     "web": {
-      "favicon": "./assets/images/icon.png"
+      "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
       [
@@ -40,6 +40,15 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": "https://replit.com/"
+      },
+      "eas": {
+        "projectId": "f56afd8f-37ab-4e4a-a8e5-a66f7da22215"
+      }
+    },
+    "owner": "satyamjh07"
   }
 }
