@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "ZEROday",
+    "slug": "workspace",
+    "scheme": "mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#050508"
+    },
+    "android": {
+      "package": "com.satyamjh07.workspace",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#050508"
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ee8b98b0-e465-4afb-b368-c64848adef7e"
+      }
+    },
+    "plugins": [
+      "expo-font",
+      "expo-image",
+      "expo-web-browser",
+      "expo-router"
+    ]
+  }
+}
+
